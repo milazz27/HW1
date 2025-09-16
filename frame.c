@@ -1,3 +1,10 @@
+/*
+ * Author: Milena Zlatkovic
+ * Date: September 16, 2025
+ * Homework: 1
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
