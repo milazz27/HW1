@@ -1,0 +1,16 @@
+Book added!
+Book added!
+Book added!
+1. 1 | The Great Gatsby | F. Scott Fitzgerald | 1925
+2. 2 | Dune | Frank Herbert | 1965
+3. 3 | Neuromancer | William Gibson | 1984
+Book with ID 2 deleted!
+1. 1 | The Great Gatsby | F. Scott Fitzgerald | 1925
+2. 3 | Neuromancer | William Gibson | 1984
+No book with title "Dune" found.
+Found: 1 | The Great Gatsby | F. Scott Fitzgerald | 1925
+Book with ID 3 deleted!
+1. 1 | The Great Gatsby | F. Scott Fitzgerald | 1925
+Book with ID 1 deleted!
+Book with ID 2 not found to delete!
+No books in library.
