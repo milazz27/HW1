@@ -26,65 +26,52 @@ int main(int argc, char* argv[]) {
 
 //=========================== Allocate 2D array dynamically ============================
 
+/*
+@brief: dynamically allocates a matrix 
+@param: int rows: number of rows for matrix
+@param: int cols: number of cols for matrix
+@return: int** for allocates matrix
+*/
 int** allocate2D(int rows, int cols) {
-    /* 
-       This is the function where you need to allocate a 
-       2d array and return its address. Make sure that 
-       all error handlings are done where needed. You need
-       to have an array of pointers in which each element
-       points to one row of the matrix. You may use
-       malloc() library function for memory allocation. 
-    */
-
     int** matrix = (int**)malloc(rows * sizeof(int*));
-
     for(int i = 0; i < rows; i++){
         matrix[i] = (int*)malloc(cols * sizeof(int));
     }
-
     for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
-            matrix[i][j] = 0;
+            matrix[i][j] = 0; //initializing to 0
         }
     }
-
     return matrix;
 }
 
 //================================ Free 2D array ========================================
 
+/*
+@brief: frees the memory allocated for the matrix
+@param: int** arr: pointer to matrix to free
+@param: int rows: number of rows in matrix
+@effect: matrix memory is freed
+@return: none
+*/
 void free2D(int** arr, int rows) {
-
-    /*  
-        This function frees the allocated memory. 
-        Freeing a memory allocation is usually the reverse
-        of allocation. 
-    */
-
     for(int i = 0; i < rows; i++){
         free(arr[i]);
     }
-
     free(arr);
 }
 
 //=========================== Read grades from file =====================================
 
+/*
+@brief: function builds and fills in matrix from values in the input file
+@param: const char* filename: const ptr to name of the file to read from
+@param: int* s: ptr to value for number of rows
+@param: int* c: ptr to value of num of cols
+@effect: dynamically allocates memory for 2D array
+@return: ptr to new 2D Array
+*/
 int** readGradesFromFile(const char* filename, int* s, int* c) {
-    
-    /* 
-       This is the part that your program needs to handle files.
-       The program needs to read from the file specified
-       by the filename and return a pointer to the matrix
-       of the numbers read from that file. Within this function, 
-       your program needs to call allocate2D() function to allocate
-       the 2d array for storing the numbers. Do not forget to do error
-       handling when opening the file. The program also needs to close 
-       the file when needed. Argumnets s and c are referenced meaning that
-       the calling function will use them. Therefore, you need to read 
-       those values from the file and put those values in s and c. But
-       remember s and c are pointers to integers (not integers themselves). 
-    */
     int** matrix;
     FILE* fp = fopen(filename, "r");
     if(fp != NULL){
@@ -92,7 +79,6 @@ int** readGradesFromFile(const char* filename, int* s, int* c) {
             printf("ERROR READING FIRST LINE!");
         }
         matrix = allocate2D((*s),(*c));
-
         int num;
         int i = 0, j = 0;
         while(fscanf(fp, "%d", &num) == 1 && i < (*s)){
@@ -109,31 +95,49 @@ int** readGradesFromFile(const char* filename, int* s, int* c) {
     else{
         printf("ERROR OPENING FILE!!");
     }
-
     fclose(fp);
     return matrix;
 }
 
 //========================= Write averages to output file ==============================
 
+/*
+@brief: computes averages for courses and students and writes them to file
+@param: const char* filename: ptr to name of file to write to
+@param: int** arr: ptr to 2D array that holds score values
+@param: int s: num of rows
+@param: int c: num of cols
+@effect: writes to file
+@return: none
+*/
 void writeAveragesToFile(const char* filename, int** arr, int s, int c) {
-
-    /* 
-       This function uses array arr and computes the average for each student
-       and writes each student average in the same line of the file specified
-       by filename. Then, it computes the average of each course and writes
-       each course average in the same line (the line after the student 
-       averages). Make sure to do error handling. compute bothaverages as 
-       doubles and write the average with 2 decimal points in the file. 
-    */
+    FILE* fp = fopen(filename, "w");
+    if(fp == NULL){
+        printf("ERROR OPENING FILE TO WRITE!!");
+        return;
+    }
+    //array to assist computing course sums
+    int courseSums[c];
+    for(int i = 0; i < c; i++){
+        courseSums[i] = 0; //initializing to 0
+    }
     double avg;
     int sum = 0;
+    //computing averages
     for(int i = 0; i < s; i++){
         for(int j = 0; j < c; j++){
             sum += arr[i][j];
+            courseSums[j] += arr[i][j];
         }
     avg = (double)sum / c;
     sum = 0;
-    printf("%.2f  ", avg);
+    fprintf(fp, "%.2f ", avg); //writing student averages
     }
+    fprintf(fp, "\n");
+    for(int i = 0; i < c; i++){
+        avg = (double)courseSums[i] / s;
+        fprintf(fp, "%.2f ", avg); //writing course averages
+    }
+    fprintf(fp, "\n");
+    fclose(fp);
 }
